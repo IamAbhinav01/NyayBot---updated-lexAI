@@ -1,0 +1,36 @@
+{
+  "name": "nyaybot-legal-ai",
+  "version": "1.0.0",
+  "description": "A modern legal AI assistant with beautiful chat interface and voice capabilities",
+  "main": "src/index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "build": "npx tailwindcss -i ./src/input.css -o ./src/output.css --watch",
+    "build-css": "npx tailwindcss -i ./src/input.css -o ./src/output.css --minify"
+  },
+  "keywords": [
+    "legal",
+    "ai",
+    "assistant",
+    "chat",
+    "voice",
+    "javascript",
+    "tailwind",
+    "html"
+  ],
+  "author": "NyayBot Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.13",
+    "tailwindcss": "^4.1.13"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IamAbhinav01/-LexAI-Justice-AI-Legal-Assistant-for-Indian-Law.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IamAbhinav01/-LexAI-Justice-AI-Legal-Assistant-for-Indian-Law/issues"
+  },
+  "homepage": "https://github.com/IamAbhinav01/-LexAI-Justice-AI-Legal-Assistant-for-Indian-Law#readme"
+}
