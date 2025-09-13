@@ -3,10 +3,9 @@ window.onload = function () {
 
   function addMessage(sender, text) {
     const msg = document.createElement('div');
-    msg.className = sender === 'user' 
-      ? 'flex justify-end mb-4'
-      : 'flex justify-start mb-4';
-    
+    msg.className =
+      sender === 'user' ? 'flex justify-end mb-4' : 'flex justify-start mb-4';
+
     if (sender === 'user') {
       msg.innerHTML = `
         <div class="max-w-xs lg:max-w-md bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-2xl rounded-br-sm shadow-lg">
@@ -36,35 +35,56 @@ window.onload = function () {
         </div>
       `;
     }
-    
+
     // Add message to chat window (newest at top due to flex-col-reverse)
     chatWindow.insertBefore(msg, chatWindow.firstChild);
-    
+
     // Scroll to show latest message (scrollTop = 0 shows bottom in reverse flex)
     chatWindow.scrollTop = 0;
   }
 
-  // Add initial welcome message
-  addMessage('bot', '👋 Welcome to NyayBot! I\'m your AI legal assistant, ready to help you with legal questions, document analysis, and legal guidance. What would you like to know?');
+  const startButton = document.getElementById('voiceBtn');
+  const outputDiv = document.getElementById('legalQuery');
 
-  // Handle form submission
-  const form = document.querySelector('form');
-  const input = document.getElementById('legalQuery');
+  const recognition = new (window.SpeechRecognition ||
+    window.webkitSpeechRecognition ||
+    window.mozSpeechRecognition ||
+    window.msSpeechRecognition)();
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const query = input.value.trim();
-    if (query) {
-      addMessage('user', query);
-      input.value = '';
+  recognition.lang = 'en-US';
+  recognition.continuous = true; // keeps listening until stopped
+  recognition.interimResults = true; // shows partial results
 
-        // Simulate bot response (replace with actual AI integration)
-        setTimeout(() => {
-          addMessage(
-            'bot',
-            `I understand you're asking about: "${query}"<br><br>🔍 Let me analyze this legal question for you. In a real implementation, I would connect to my AI backend to provide detailed legal assistance, case law references, and actionable guidance.`
-          );
-        }, 1000);
+  let isListening = false; // toggle state
+
+  recognition.onstart = () => {
+    startButton.innerHTML = '<i class="fas fa-stop text-xl text-red-500"></i>';
+  };
+
+  recognition.onresult = (event) => {
+    let transcript = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      transcript += event.results[i][0].transcript;
+    }
+    outputDiv.value = transcript; // show in input box
+  };
+
+  recognition.onend = () => {
+    if (isListening) {
+      // restart automatically if toggle is ON
+      recognition.start();
+    } else {
+      startButton.innerHTML = '<i class="fas fa-microphone text-xl"></i>';
+    }
+  };
+
+  startButton.addEventListener('click', () => {
+    if (!isListening) {
+      isListening = true;
+      recognition.start();
+    } else {
+      isListening = false;
+      recognition.stop();
     }
   });
 };
